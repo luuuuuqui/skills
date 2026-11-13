@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Convert Markdown into WhatsApp-formatted text without translating it.
+"""convert markdown into whatsapp-formatted text without translating it.
 
-Usage:
+usage:
   python to_whatsapp.py input.md              # write to stdout
   cat input.md | python to_whatsapp.py        # read from stdin
-  python to_whatsapp.py input.md -o output.txt # write a UTF-8 file
+  python to_whatsapp.py input.md -o output.txt # write a utf-8 file
 
-Conversions:
+conversions:
   **bold** / __bold__        -> *bold*
   *italic*                  -> _italic_
   ~~strike~~                -> ~strike~
@@ -18,15 +18,15 @@ Conversions:
   - [x] task                -> - ✅ task
   code fences               -> triple backticks without language tags
 
-Code content is protected from emphasis conversion. Inline code delimiters
+code content is protected from emphasis conversion. inline code delimiters
 are normalized to single backticks and surrounding whitespace is trimmed.
-This is a best-effort converter, not a full Markdown parser.
+this is a best-effort converter, not a full markdown parser.
 """
 import argparse
 import re
 import sys
 
-BOLD = "\ue000"  # WhatsApp bold placeholder, replaced with * at the end
+BOLD = "\ue000"  # whatsapp bold placeholder, replaced with * at the end
 STASH_OPEN = "\ue001"
 STASH_CLOSE = "\ue002"
 
@@ -69,7 +69,7 @@ def _link(m):
 
 def inline(text, put):
     text = LINK_RE.sub(_link, text)
-    # Protect URLs from emphasis patterns (underscores and tildes in URLs).
+    # protect urls from emphasis patterns (underscores and tildes in urls).
     text = re.sub(r"https?://[^\s<>\]]+", lambda m: put(m.group(0)), text)
     text = re.sub(
         r"(\*\*\*|___)(?=\S)(.+?)(?<=\S)\1",
@@ -202,8 +202,8 @@ def convert(text):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Convert Markdown to WhatsApp-formatted text")
-    ap.add_argument("file", nargs="?", help="Markdown input file (stdin if omitted)")
+    ap = argparse.ArgumentParser(description="convert markdown to whatsapp-formatted text")
+    ap.add_argument("file", nargs="?", help="markdown input file (stdin if omitted)")
     ap.add_argument("-o", "--out", help="output file (stdout if omitted)")
     args = ap.parse_args()
 
