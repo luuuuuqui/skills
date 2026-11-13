@@ -9,7 +9,7 @@ metadata:
 
 ## context
 
-an agent may have access to whatsapp through an api or another integration. if no suitable integration is available, access is missing, or delivery cannot be completed, provide the formatted text for the user to copy and send manually. do not assume api access is always available or always absent.
+choose between delivering text in chat and sending through whatsapp based on the user's request and preferences, not the availability of an integration. an agent may have access to whatsapp through an api or another integration. if the requested delivery cannot be completed because access or a suitable integration is unavailable, explain the limitation and provide the formatted text for manual copying.
 
 this skill handles formatting; sending requires the user's authorization and a suitable tool. preparing a message does not itself authorize sending it. the bundled converter only transforms text and does not call whatsapp.
 
@@ -21,9 +21,13 @@ produce copyable whatsapp text in the language requested by the user. preserve t
 
 ### deliver the formatted text
 
+- a request to format, draft, or provide text means deliver it in chat for copying, even when an integration is available. requests such as "i'll send it myself" or "send me the text so i can forward it" explicitly choose manual delivery. respect that preference and do not keep proposing integration-based sending.
+- an explicit request to send a message to a recipient on whatsapp authorizes that sending action within the requested scope. use an available integration when access and the necessary message and recipient information are sufficient, following other applicable instructions. do not add a routine confirmation when the request already authorizes the action; ask only for missing information or when another applicable instruction requires it.
+- if the request is genuinely ambiguous between providing text in chat and sending it on whatsapp, clarify before sending. do not infer permission to send from a formatting request or tool availability.
+
 for manual copying, put the finished message in a fenced code block. chat uis render markdown, so `*bold*` shows up as italic and the asterisks can be lost when copied. a code block preserves the raw characters.
 
-for authorized delivery through an available integration, pass the raw whatsapp-formatted message without the outer chat code fence. preserve any backticks that belong to the message itself. report the actual delivery result; if it is uncertain, state that uncertainty rather than claiming success or automatically sending again.
+for authorized delivery through an available integration, pass the raw whatsapp-formatted message without the outer chat code fence. preserve any backticks that belong to the message itself. report failures and actual delivery results accurately. if the result is uncertain, state that uncertainty rather than claiming success or automatically sending again; provide copyable text without implying that sending it manually would be free of duplication risk.
 
 for manual copying:
 
@@ -97,7 +101,12 @@ it does not flatten nested lists (indentation is kept), and it has no dedicated 
 
 requests such as "format this announcement for whatsapp" or "convert this markdown summary into a whatsapp message" should activate this skill. equivalent requests in other languages should work the same way.
 
-example of a final reply:
+- "format this for whatsapp; i'll send it myself" → provide copyable text in chat, regardless of integration availability.
+- "send this message to [recipient] on whatsapp" → send through an available integration when access and information are sufficient; the explicit request authorizes sending, subject to other applicable instructions.
+- "send me the text so i can forward it" → provide text in chat; do not send it on whatsapp.
+- "send this for whatsapp" with no context establishing whether the user wants text or delivery → clarify the intended action before sending.
+
+example of a final reply for manual copying:
 
 ````
 ```
